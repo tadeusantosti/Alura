@@ -2,6 +2,7 @@ package br.com.caelum.financas.modelo;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,7 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -28,10 +30,22 @@ public class Movimentacao {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar data;
 
-	@ManyToOne
+	@OneToOne
 	private Conta conta;
 	
+	@ManyToMany
+	private List<Categoria> categoria;
+	
 	private BigDecimal valor;
+	
+	public List<Categoria> getCategorias() {
+		return categoria;
+	}
+
+	public void setCategorias(List<Categoria> categoria) {
+		this.categoria = categoria;
+	}
+
 	private String descricao;
 	
 	public String getDescricao() {
