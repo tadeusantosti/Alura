@@ -1,4 +1,3 @@
-
 package br.com.caelum.model;
 
 import java.util.ArrayList;
@@ -11,12 +10,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Produto {
 
 	@Id
@@ -34,28 +37,16 @@ public class Produto {
 	@Min(20)
 	private double preco;
 
+	@Version
+	private Integer versao;
+
+	@ManyToMany
+	@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+	private List<Categoria> categorias = new ArrayList<>();
+
 	@Valid
 	@ManyToOne
 	private Loja loja;
-
-	@ManyToMany
-	private List<Categoria> categorias = new ArrayList<>();
-
-	// método auxiliar para associar categorias com o produto
-	// se funcionar apos ter definido o relacionamento entre produto e categoria
-	// public void adicionarCategorias(Categoria... categorias) {
-	// for (Categoria categoria : categorias) {
-	// this.categorias.add(categoria);
-	// }
-	// }
-
-	public List<Categoria> getCategorias() {
-		return categorias;
-	}
-
-	public void setCategorias(List<Categoria> categorias) {
-		this.categorias = categorias;
-	}
 
 	public String getDescricao() {
 		return descricao;
@@ -63,6 +54,12 @@ public class Produto {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public void adicionarCategorias(Categoria... categorias) {
+		for (Categoria categoria : categorias) {
+			this.categorias.add(categoria);
+		}
 	}
 
 	public String getLinkDaFoto() {
@@ -103,6 +100,22 @@ public class Produto {
 
 	public Loja getLoja() {
 		return loja;
+	}
+
+	public List<Categoria> getCategorias() {
+		return categorias;
+	}
+
+	public void setCategorias(List<Categoria> categorias) {
+		this.categorias = categorias;
+	}
+
+	public Integer getVersao() {
+		return versao;
+	}
+
+	public void setVersao(Integer versao) {
+		this.versao = versao;
 	}
 
 }
